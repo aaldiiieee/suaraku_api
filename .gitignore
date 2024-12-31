@@ -1,0 +1,10 @@
+node_modules
+
+temp/*
+.DS_Store
+
+/generated/*
+
+generated/
+
+.env
