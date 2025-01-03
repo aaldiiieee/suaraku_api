@@ -68,7 +68,7 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { mu_nik, mu_password } = req.body;
+  const { mu_nik, mu_phoneNumber, mu_password } = req.body;
 
   try {
     const user = await prisma.mst_users.findUnique({
@@ -76,12 +76,36 @@ export const login = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ message: "User tidak ditemukan." });
+      return res.status(404).json({
+        message: "User tidak ditemukan.",
+        status: 404,
+        success: false,
+      });
+    }
+
+    if (user.mu_nik !== mu_nik) {
+      return res.status(401).json({
+        message: "NIK salah.",
+        status: 401,
+        success: false,
+      });
+    }
+
+    if (user.mu_phoneNumber !== mu_phoneNumber) {
+      return res.status(401).json({
+        message: "Nomor telepon salah.",
+        status: 401,
+        success: false,
+      });
     }
 
     const isPasswordValid = await bcrypt.compare(mu_password, user.mu_password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Password salah." });
+      return res.status(401).json({
+        message: "Password salah.",
+        status: 401,
+        success: false,
+      });
     }
 
     // const token = jwt.sign(
