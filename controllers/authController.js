@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { generateUUIDv4 } from "../utils/generators.js";
 // import twilio from "twilio";
 
 const prisma = new PrismaClient();
@@ -15,8 +16,10 @@ const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 export const register = async (req, res) => {
   const {
     mu_nik,
+    mu_fullname,
     mu_phoneNumber,
     mu_password,
+    mu_blood_type,
     mu_address,
     mu_province,
     mu_city,
@@ -41,8 +44,11 @@ export const register = async (req, res) => {
     const newUser = await prisma.mst_users.create({
       data: {
         mu_nik,
+        mu_uuid: generateUUIDv4(),
+        mu_fullname,
         mu_phoneNumber,
         mu_password: hashedPassword,
+        mu_blood_type,
         mu_address,
         mu_province,
         mu_city,
@@ -69,6 +75,8 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { mu_nik, mu_password } = req.body;
+
+  console.log(req.body);
 
   try {
     const user = await prisma.mst_users.findUnique({

@@ -9,9 +9,12 @@ datasource db {
 
 model mst_users {
   mu_id          Int      @id @default(autoincrement())
+  mu_uuid        String   @unique @default(uuid())
   mu_nik         String   @unique
+  mu_fullname    String
   mu_phoneNumber String
   mu_password    String
+  mu_blood_type  String
   mu_address     String
   mu_province    String
   mu_city        String
