@@ -131,7 +131,19 @@ export const login = async (req, res) => {
       message: "Login berhasil.",
       status: 200,
       success: true,
-      token
+      data: {
+        mu_id: user.mu_id,
+        mu_uuid: user.mu_uuid,
+        mu_nik: user.mu_nik,
+        mu_fullname: user.mu_fullname,
+        mu_phoneNumber: user.mu_phoneNumber,
+        mu_blood_type: user.mu_blood_type,
+        mu_address: user.mu_address,
+        mu_province: user.mu_province,
+        mu_city: user.mu_city,
+        mu_district: user.mu_district,
+        token,
+      }
     });
   } catch (error) {
     res
