@@ -141,8 +141,122 @@ export const login = async (req, res) => {
         mu_address: user.mu_address,
         mu_province: user.mu_province,
         mu_city: user.mu_city,
+        mu_pin: user.mu_pin,
         mu_district: user.mu_district,
         token,
+      }
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan.", error: error.message });
+  }
+};
+
+export const pin = async (req, res) => {
+  const { mu_nik, mu_pin } = req.body;
+
+  try {
+    const user = await prisma.mst_users.findUnique({
+      where: { mu_nik },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User tidak ditemukan.",
+        status: 404,
+        success: false,
+      });
+    }
+
+    if (user.mu_nik !== mu_nik) {
+      return res.status(401).json({
+        message: "NIK salah.",
+        status: 401,
+        success: false,
+      });
+    }
+
+    const isPinValid = await bcrypt.compare(mu_pin, user.mu_pin);
+    if (!isPinValid) {
+      return res.status(401).json({
+        message: "PIN salah.",
+        status: 401,
+        success: false,
+      });
+    }
+
+    res.status(200).json({
+      message: "PIN berhasil.",
+      status: 200,
+      success: true,
+      data: {
+        mu_id: user.mu_id,
+        mu_uuid: user.mu_uuid,
+        mu_nik: user.mu_nik,
+        mu_fullname: user.mu_fullname,
+        mu_phoneNumber: user.mu_phoneNumber,
+        mu_blood_type: user.mu_blood_type,
+        mu_address: user.mu_address,
+        mu_province: user.mu_province,
+        mu_city: user.mu_city,
+        mu_district: user.mu_district,
+      }
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Terjadi kesalahan.", error: error.message });
+  }
+};
+
+export const registerPin = async (req, res) => {
+  const { mu_nik, mu_pin } = req.body;
+
+  try {
+    const user = await prisma.mst_users.findUnique({
+      where: { mu_nik },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User tidak ditemukan.",
+        status: 404,
+        success: false,
+      });
+    }
+
+    if (user.mu_nik !== mu_nik) {
+      return res.status(401).json({
+        message: "NIK salah.",
+        status: 401,
+        success: false,
+      });
+    }
+    
+    const hashedPin = await bcrypt.hash(mu_pin, 10);
+    await prisma.mst_users.update({
+      where: { mu_nik },
+      data: {
+        mu_pin: hashedPin,
+      },
+    });
+
+    res.status(200).json({
+      message: "PIN berhasil.",
+      status: 200,
+      success: true,
+      data: {
+        mu_id: user.mu_id,
+        mu_uuid: user.mu_uuid,
+        mu_nik: user.mu_nik,
+        mu_fullname: user.mu_fullname,
+        mu_phoneNumber: user.mu_phoneNumber,
+        mu_blood_type: user.mu_blood_type,
+        mu_address: user.mu_address,
+        mu_province: user.mu_province,
+        mu_city: user.mu_city,
+        mu_district: user.mu_district,
       }
     });
   } catch (error) {

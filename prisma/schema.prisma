@@ -18,6 +18,7 @@ model mst_users {
   mu_address     String
   mu_province    String
   mu_city        String
+  mu_pin         String?
   mu_district    String
   mu_createdAt   DateTime @default(now())
   mu_updatedAt   DateTime @updatedAt
