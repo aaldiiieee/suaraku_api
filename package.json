@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
+    "build": "npx prisma db push && npx prisma generate && vercel build",
     "pull-generate": "npx prisma db pull && npx prisma generate"
   },
   "keywords": [],
