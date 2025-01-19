@@ -45,6 +45,13 @@ class User {
   static async createUser(data) {
     return prisma.mst_users.create({ data });
   }
+
+  static async updatePhoneNumber(uuid, phoneNumber) {
+    return prisma.mst_users.update({
+      where: { mu_uuid: uuid },
+      data: { mu_phoneNumber: phoneNumber },
+    });
+  }
 }
 
 export default User;
