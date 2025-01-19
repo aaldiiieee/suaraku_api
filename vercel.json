@@ -9,13 +9,7 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "app.js"
+            "destination": "app.js"
         }
-    ],
-    "rewrites": [
-        {
-            "source": "/health",
-            "destination": "/health-check"
-        }
-    ] 
+    ]
 }
