@@ -10,6 +10,7 @@ class User {
         mu_uuid: true,
         mu_nik: true,
         mu_fullname: true,
+        mu_avatar_url: true,
         mu_phoneNumber: true,
         mu_blood_type: true,
         mu_address: true,
@@ -30,6 +31,7 @@ class User {
         mu_uuid: true,
         mu_nik: true,
         mu_fullname: true,
+        mu_avatar_url: true,
         mu_phoneNumber: true,
         mu_blood_type: true,
         mu_address: true,
@@ -51,6 +53,20 @@ class User {
       where: { mu_uuid: uuid },
       data: { mu_phoneNumber: phoneNumber },
     });
+  }
+
+  static async updateUserAvatar(uuid, avatarUrl) {
+    try {
+      const updatedUser = await prisma.mst_users.update({
+        where: { mu_uuid: uuid },
+        data: { mu_avatar_url: avatarUrl },
+      });
+
+      return updatedUser;
+    } catch (error) {
+      console.error("Failed to update user avatar:", error);
+      throw new Error("Failed to update user avatar");
+    }
   }
 }
 

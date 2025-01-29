@@ -1,4 +1,7 @@
 import User from "../models/userModel.js";
+import cloudinary from "../config/cloudinary.js";
+import upload from "../config/multer.js";
+import fs from "fs";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -111,3 +114,47 @@ export const updatePhoneNumber = async (req, res) => {
     });
   }
 };
+
+export const uploadAvatar = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        message: "No file uploaded!",
+        status: 400,
+        success: false,
+      });
+    }
+
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'avatars',
+    });
+
+    fs.unlinkSync(req.file.path);
+
+    const { uuid } = req.params;
+    const updatedUser = await User.updateUserAvatar(uuid, result.secure_url);
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        message: "User not found",
+        status: 404,
+        success: false,
+      });
+    }
+
+    res.status(200).json({
+      message: "Avatar uploaded successfully!",
+      status: 200,
+      success: true,
+      data: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: error.message,
+      message: "Failed to upload avatar",
+      status: 500,
+      success: false,
+    });
+  }
+}

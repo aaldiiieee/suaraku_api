@@ -10,17 +10,18 @@ datasource db {
 
 model mst_users {
   mu_id          Int      @id @default(autoincrement())
-  mu_uuid        String   @unique @default(uuid())
   mu_nik         String   @unique
-  mu_fullname    String
   mu_phoneNumber String
   mu_password    String
-  mu_blood_type  String
   mu_address     String
   mu_province    String
   mu_city        String
-  mu_pin         String?
   mu_district    String
   mu_createdAt   DateTime @default(now())
   mu_updatedAt   DateTime @updatedAt
+  mu_blood_type  String
+  mu_fullname    String
+  mu_uuid        String   @unique @default(uuid())
+  mu_pin         String?
+  mu_avatar_url  String?
 }
