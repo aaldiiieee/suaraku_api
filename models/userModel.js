@@ -38,6 +38,7 @@ class User {
         mu_province: true,
         mu_city: true,
         mu_district: true,
+        mu_avatar_public_id: true,
         mu_createdAt: true,
         mu_updatedAt: true,
       }
@@ -55,14 +56,41 @@ class User {
     });
   }
 
-  static async updateUserAvatar(uuid, avatarUrl) {
+  // static async updateUserAvatar(uuid, avatarUrl, avatarPublicId) {
+  //   try {
+  //     const updatedUser = await prisma.mst_users.update({
+  //       where: { mu_uuid: uuid },
+  //       data: { mu_avatar_url: avatarUrl, mu_avatar_public_id: avatarPublicId },
+  //     });
+
+  //     return updatedUser;
+  //   } catch (error) {
+  //     console.error("Failed to update user avatar:", error);
+  //     throw new Error("Failed to update user avatar");
+  //   }
+  // }
+
+  static async updateUserAvatar(uuid, avatarUrl, avatarPublicId) {
     try {
+      const existingUser = await prisma.mst_users.findUnique({
+        where: { mu_uuid: uuid },
+        select: {
+          mu_avatar_public_id: true
+        }
+      });
+  
       const updatedUser = await prisma.mst_users.update({
         where: { mu_uuid: uuid },
-        data: { mu_avatar_url: avatarUrl },
+        data: { 
+          mu_avatar_url: avatarUrl, 
+          mu_avatar_public_id: avatarPublicId 
+        },
       });
-
-      return updatedUser;
+  
+      return {
+        oldPublicId: existingUser?.mu_avatar_public_id,
+        updatedUser
+      };
     } catch (error) {
       console.error("Failed to update user avatar:", error);
       throw new Error("Failed to update user avatar");

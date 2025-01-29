@@ -72,7 +72,7 @@ export const updatePhoneNumber = async (req, res) => {
     const headers = req.headers;
 
     if (!headers.authorization) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         message: "Unauthorized",
         status: 401,
       });
@@ -81,7 +81,7 @@ export const updatePhoneNumber = async (req, res) => {
     const token = headers.authorization.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         message: "Unauthorized Token",
         status: 401,
       });
@@ -125,14 +125,46 @@ export const uploadAvatar = async (req, res) => {
       });
     }
 
+    // const result = await cloudinary.uploader.upload(req.file.path, {
+    //   folder: "avatars",
+    // });
+
+    // fs.unlinkSync(req.file.path);
+
+    // const { uuid } = req.params;
+    // const updatedUser = await User.updateUserAvatar(uuid, result.secure_url, result.public_id);
+
+    // if (!updatedUser) {
+    //   return res.status(404).json({
+    //     message: "User not found",
+    //     status: 404,
+    //     success: false,
+    //   });
+    // }
+
+    // if (updatedUser.mu_avatar_public_id) {
+    //   await cloudinary.uploader.destroy(updatedUser.mu_avatar_public_id);
+    // }
+
+    // res.status(200).json({
+    //   message: "Avatar uploaded successfully!",
+    //   status: 200,
+    //   success: true,
+    //   data: updatedUser,
+    // });
+
+    const { uuid } = req.params;
     const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'avatars',
+      folder: "avatars",
     });
 
     fs.unlinkSync(req.file.path);
 
-    const { uuid } = req.params;
-    const updatedUser = await User.updateUserAvatar(uuid, result.secure_url);
+    const { oldPublicId, updatedUser } = await User.updateUserAvatar(
+      uuid,
+      result.secure_url,
+      result.public_id
+    );
 
     if (!updatedUser) {
       return res.status(404).json({
@@ -140,6 +172,10 @@ export const uploadAvatar = async (req, res) => {
         status: 404,
         success: false,
       });
+    }
+
+    if (oldPublicId) {
+      await cloudinary.uploader.destroy(oldPublicId);
     }
 
     res.status(200).json({
@@ -157,4 +193,4 @@ export const uploadAvatar = async (req, res) => {
       success: false,
     });
   }
-}
+};

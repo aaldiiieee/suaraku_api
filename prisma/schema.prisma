@@ -9,19 +9,20 @@ datasource db {
 }
 
 model mst_users {
-  mu_id          Int      @id @default(autoincrement())
-  mu_nik         String   @unique
-  mu_phoneNumber String
-  mu_password    String
-  mu_address     String
-  mu_province    String
-  mu_city        String
-  mu_district    String
-  mu_createdAt   DateTime @default(now())
-  mu_updatedAt   DateTime @updatedAt
-  mu_blood_type  String
-  mu_fullname    String
-  mu_uuid        String   @unique @default(uuid())
-  mu_pin         String?
-  mu_avatar_url  String?
+  mu_id                 Int      @id @default(autoincrement())
+  mu_nik                String   @unique
+  mu_phoneNumber        String
+  mu_password           String
+  mu_address            String
+  mu_province           String
+  mu_city               String
+  mu_district           String
+  mu_createdAt          DateTime @default(now())
+  mu_updatedAt          DateTime @updatedAt
+  mu_blood_type         String
+  mu_fullname           String
+  mu_uuid               String   @unique @default(uuid())
+  mu_pin                String?
+  mu_avatar_url         String?
+  mu_avatar_public_id   String?
 }
